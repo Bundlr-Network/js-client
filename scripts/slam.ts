@@ -1,5 +1,6 @@
 import Bundlr from "../src";
 import { readFileSync } from "fs";
+import { performance } from "perf_hooks"
 
 //const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -8,7 +9,8 @@ import { readFileSync } from "fs";
 async function a() {
     const start = performance.now();
     let p = []
-    const bundler = new Bundlr("http://node2.bundlr.network", "arweave", JSON.parse(readFileSync("./wallet.json").toString()))
+    const keys = JSON.parse(readFileSync("wallet.json").toString());
+    const bundler = await Bundlr.init("http://devnet.bundlr.network", "arweave", keys.arweave)
     console.log(await bundler.getLoadedBalance());
     for (let i = 0; i < 4000; i++) {
         console.log(i)

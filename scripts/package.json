@@ -1,0 +1,13 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@supercharge/promise-pool": "^2.1.0",
+    "arweave": "^1.10.23",
+    "axios": "^0.26.1",
+    "csv": "^6.0.5",
+    "tmp-promise": "^3.0.3"
+  }
+}

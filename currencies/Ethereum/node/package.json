@@ -1,0 +1,51 @@
+{
+  "name": "@bundlr-network/ethereum",
+  "version": "0.0.1-rc1",
+  "description": "Ethereum Currency for Bundlr",
+  "main": "index.js",
+  "author": "JesseTheRobot",
+  "license": "MIT",
+  "scripts": {
+    "dev:build": "rm -rf ./cjs && rm -rf ./esm && tsc -p ./cjs.json && ttsc -p ./esm.json",
+    "build": "yarn run dev:build"
+  },
+  "exports": {
+    ".": {
+      "import": "./esm/node/index.js",
+      "require": "./cjs/node/index.js"
+    },
+    "./keccak256": {
+      "import": "./esm/node/keccak256.js",
+      "require": "./cjs/node/keccak256.js"
+    },
+    "./*": {
+      "import": "./*.js",
+      "require": "./*.js"
+    }
+  },
+  "files": [
+    "cjs/**/*",
+    "esm/**/*"
+  ],
+  "peerDependencies": {
+    "@bundlr-network/client": "^0.8.0-rc1"
+  },
+  "dependencies": {
+    "base64url": "^3.0.1",
+    "bignumber.js": "^9.0.2",
+    "bn.js": "^5.2.0",
+    "ethers": "^5.6.2",
+    "keccak": "^3.0.2",
+    "secp256k1": "^4.0.3"
+  },
+  "devDependencies": {
+    "@bundlr-network/client": "^0.8.0-rc1",
+    "@types/keccak": "^3.0.1",
+    "base64url": "^3.0.1",
+    "bignumber.js": "^9.0.2",
+    "bn.js": "^5.2.0",
+    "ethers": "^5.6.2",
+    "keccak": "^3.0.2",
+    "secp256k1": "^4.0.3"
+  }
+}

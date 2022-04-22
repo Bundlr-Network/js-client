@@ -1,0 +1,24 @@
+import SolanaSigner from "./SolanaSigner";
+export default class HexSolanaSigner extends SolanaSigner {
+  signatureType = 4; // for solana sig type
+
+  constructor(key: string) {
+    super(key);
+  }
+
+  async sign(message: Uint8Array): Promise<Uint8Array> {
+    return super.sign(Buffer.from(Buffer.from(message).toString("hex")));
+  }
+
+  static async verify(
+    pk: Buffer,
+    message: Uint8Array,
+    signature: Uint8Array,
+  ): Promise<boolean> {
+    return super.verify(
+      pk,
+      Buffer.from(Buffer.from(message).toString("hex")),
+      signature,
+    );
+  }
+}

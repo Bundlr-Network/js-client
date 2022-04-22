@@ -3,7 +3,7 @@ import internal, { Transform } from "stream";
 export default class SizeChunker extends Transform {
     protected bytesPassed = 0
     protected currentChunk = -1
-    protected lastEmittedChunk = undefined
+    protected lastEmittedChunk: number | undefined = undefined
     protected chunkSize;
     protected flushTail;
 
@@ -19,13 +19,13 @@ export default class SizeChunker extends Transform {
         });
 
     }
-    protected finishChunk(done): void {
+    protected finishChunk(done: () => void): void {
         if (this.listenerCount("chunkEnd") > 0) {
-            this.emit("chunkEnd", this.currentChunk, function (): void {
+            this.emit("chunkEnd", this.currentChunk, (): void => {
                 this.bytesPassed = 0;
                 this.lastEmittedChunk = undefined;
                 done();
-            }.bind(this));
+            });
         } else {
             this.bytesPassed = 0;
             this.lastEmittedChunk = undefined;
@@ -33,7 +33,7 @@ export default class SizeChunker extends Transform {
         }
     }
 
-    protected startChunk(done): void {
+    protected startChunk(done: () => void): void {
         this.currentChunk++;
         if (this.listenerCount("chunkStart") > 0) {
             this.emit("chunkStart", this.currentChunk, done)
@@ -42,7 +42,7 @@ export default class SizeChunker extends Transform {
         }
     }
 
-    protected pushData(buf): void {
+    protected pushData(buf: Buffer): void {
         this.push({
             data: buf,
             id: this.currentChunk
@@ -51,19 +51,19 @@ export default class SizeChunker extends Transform {
         this.bytesPassed += buf.length;
     };
 
-    protected startIfNeededAndPushData(buf): void {
+    protected startIfNeededAndPushData(buf: Buffer): void {
         if (this.lastEmittedChunk != this.currentChunk) {
-            this.startChunk(function (): void {
+            this.startChunk((): void => {
                 this.lastEmittedChunk = this.currentChunk;
                 this.pushData(buf);
-            }.bind(this))
+            })
         } else {
             this.pushData(buf);
         }
     }
 
     _transform(chunk: any, _encoding: BufferEncoding, done: internal.TransformCallback): void {
-        const doTransform = function (): void {
+        const doTransform = (): void => {
 
             const bytesLeave = Math.min(chunk.length, this.chunkSize - this.bytesPassed)
             let remainder;
@@ -85,7 +85,7 @@ export default class SizeChunker extends Transform {
                 }
             }
 
-        }.bind(this);
+        }
 
         doTransform();
     }

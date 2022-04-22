@@ -1,10 +1,11 @@
 import { deepHash } from "arbundles";
-import { stringToBuffer } from "arweave/node/lib/utils";
+import { stringToBuffer } from "arweave/node/lib/utils.js";
 import { AxiosResponse } from "axios";
 import Utils from "./utils";
 import BigNumber from "bignumber.js";
 import Api from "./api";
 import base64url from "base64url";
+import { Withdrawal } from "./types";
 
 
 /**
@@ -18,7 +19,7 @@ import base64url from "base64url";
 export async function withdrawBalance(utils: Utils, api: Api, amount: BigNumber.Value): Promise<AxiosResponse<any>> {
     const c = utils.currencyConfig;
     const pkey = await c.getPublicKey();
-    const data = { publicKey: pkey, currency: utils.currency, amount: new BigNumber(amount).toString(), nonce: await utils.getNonce(), signature: undefined, sigType: c.getSigner().signatureType }
+    const data: Withdrawal = { publicKey: pkey, currency: utils.currency, amount: new BigNumber(amount).toString(), nonce: await utils.getNonce(), signature: Buffer.from([]), sigType: c.getSigner().signatureType }
     const deephash = await deepHash([stringToBuffer(data.currency), stringToBuffer(data.amount.toString()), stringToBuffer(data.nonce.toString())]);
     if (!Buffer.isBuffer(data.publicKey)) {
         data.publicKey = Buffer.from(data.publicKey);
@@ -27,7 +28,7 @@ export async function withdrawBalance(utils: Utils, api: Api, amount: BigNumber.
     // const a = data.publicKey.toString(); //fine
     // console.log(a)
 
-    data.signature = await c.sign(deephash)
+    data.signature = Buffer.from(await c.sign(deephash))
 
     const isValid = await c.verify(data.publicKey, deephash, data.signature)
 
@@ -68,7 +69,7 @@ export async function withdrawBalance(utils: Utils, api: Api, amount: BigNumber.
     //     signature: base64url.toBuffer(data.signature)
     // }))
     // console.log(`derived: ${c.ownerToAddress(base64url.decode(data.publicKey))}`)
-    const res = await api.post("/account/withdraw", data)
+    const res = await api.post("/account/withdraw", data, { timeout: api.getConfig().timeout ?? 10_000 * 10 })
     Utils.checkAndThrow(res, "Withdrawing balance")
     return res;
 }

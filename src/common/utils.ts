@@ -1,11 +1,13 @@
 // import Api from "arweave/node/lib/api";
 import { AxiosResponse } from "axios";
 import BigNumber from "bignumber.js";
+import { NodeBundlr } from "node";
+import { WebBundlr } from "web";
 import Api from "./api";
 import { Currency } from "./types";
 BigNumber.set({ DECIMAL_PLACES: 50 })
 
-export const sleep = (ms): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
+export const sleep = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 
 export default class Utils {
     public api: Api;
@@ -97,5 +99,48 @@ export default class Utils {
 
     public unitConverter(baseUnits: BigNumber.Value): BigNumber {
         return new BigNumber(baseUnits).dividedBy(this.currencyConfig.base[1]);
+    }
+}
+
+/**
+ * Dynamically (!) imports and returns the requested bundlr flavour
+ * @param currency - string name of the currency, i.e "matic" or "solana"
+ * @returns the constructor for the requested currencys' bundlr flavour
+ */
+export async function importAndGetBundlrFlavour(currency: string): Promise<{ new(url: string, wallet?: any, config?: { timeout?: number, providerUrl?: string, contractAddress?: string }): NodeBundlr | WebBundlr }> {
+
+    globalThis as any;
+    // @ts-ignore
+    if (!globalThis?.Bundlr?.currencyArrayMap) {
+        throw new Error("required global 'Bundlr.currencyArrayMap' is not initialised")
+    }
+    currency = currency.toLowerCase()
+    // @ts-ignore
+    const pkgNames = globalThis.Bundlr.currencyArrayMap.find(e => e[1].some(v => v === currency)) as [[string, string], Array<string>]
+    if (!pkgNames) {
+        throw new Error(`No package found for currency ${currency}`)
+    }
+    currency = currency.charAt(0).toUpperCase() + currency.substring(1).toLowerCase()
+    while (currency.includes("-")) {
+        const index = currency.indexOf("-");
+        currency = currency.substring(0, index) + currency.charAt(index + 1).toUpperCase() + currency.substring(index + 2)
+    }
+    try {
+        // check global
+        // @ts-ignore
+        let pkg = globalThis[pkgNames[0][1]]
+        if (!pkg) {
+            // @ts-ignore
+            pkg = await import(pkgNames[0][0]).catch(_ => { return })
+        }
+        if (!pkg) {
+            pkg = require(pkgNames[0][0])
+        }
+        // @ts-ignore
+        const flavour = pkg[`${currency}Bundlr`]
+        if (!flavour) throw new Error(`Invalid flavour ${currency} - keys: ${Object.keys(pkg)}`)
+        return flavour
+    } catch (e) {
+        throw new Error(`Unable to load Bundlr flavour ${currency} from ${pkgNames[0][0]} or from global ${pkgNames[0][1]} - please install it:\n 'npm i ${pkgNames[0][0]}'\n ${e}`)
     }
 }

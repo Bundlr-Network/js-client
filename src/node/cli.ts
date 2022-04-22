@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 // Note: DO NOT REMOVE/ALTER THE ABOVE LINE - it is called a 'shebang' and is vital for CLI execution.
-import { Command } from "commander";
+import { Command, OptionValues } from "commander";
 import { readFileSync } from "fs";
-import Bundlr from "./bundlr";
+import NodeBundlr from "./index";
 import inquirer from "inquirer";
 import { execSync } from "child_process"
 import BigNumber from "bignumber.js";
 import { checkPath } from "./upload";
-import NodeBundlr from "./bundlr";
 
 const program = new Command();
 
-let balpad, walpad; // padding state variables
+let balpad: boolean, walpad: boolean; // padding state variables
 
 // Define the CLI flags for the program
 program
@@ -41,7 +40,7 @@ program.command("balance").description("Gets the specified user's balance for th
             const bundlr = await init(options, "balance");
             const balance = await bundlr.utils.getBalance(options.address);
             console.log(`Balance: ${balance} ${bundlr.currencyConfig.base[0]} (${bundlr.utils.unitConverter(balance).toFixed()} ${bundlr.currency})`);
-        } catch (err) {
+        } catch (err: any) {
             console.error(`Error whilst getting balance: ${options.debug ? err.stack : err.message} `);
             return;
         }
@@ -52,7 +51,7 @@ program.command("withdraw").description("Sends a fund withdrawal request").argum
     .action(async (amount: string) => {
         try {
             const bundlr = await init(options, "withdraw");
-            const confirmed = confirmation(`Confirmation: withdraw ${amount} ${bundlr.currencyConfig.base[0]} from ${bundlr.api.config.host} (${await bundlr.utils.getBundlerAddress(bundlr.currency)})?\n Y / N`)
+            const confirmed = await confirmation(`Confirmation: withdraw ${amount} ${bundlr.currencyConfig.base[0]} from ${bundlr.api.config.host} (${await bundlr.utils.getBundlerAddress(bundlr.currency)})?\n Y / N`)
             if (confirmed) {
                 const res = await bundlr.withdrawBalance(new BigNumber(amount));
                 if (res.status != 200) {
@@ -62,7 +61,7 @@ program.command("withdraw").description("Sends a fund withdrawal request").argum
             } else {
                 console.log("confirmation failed");
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(`Error whilst sending withdrawal request: ${options.debug ? err.stack : err.message} `);
             return;
         }
@@ -75,7 +74,7 @@ program.command("upload").description("Uploads a specified file").argument("<fil
             const bundlr = await init(options, "upload");
             const res = await bundlr.uploadFile(file);
             console.log(`Uploaded to https://arweave.net/${res?.data?.id}`)
-        } catch (err) {
+        } catch (err: any) {
             console.error(`Error whilst uploading file: ${options.debug ? err.stack : err.message} `);
             return;
         }
@@ -96,11 +95,11 @@ program.command("deploy").description("(DEPRECATED - use the functionally identi
 async function uploadDir(folder: string): Promise<void> {
     try {
         const bundler = await init(options, "upload");
-        const res = await bundler.uploader.uploadFolder(folder, options.indexFile ?? null, +options.batchSize, options.confirmation, !options.removeDeleted, async (log): Promise<void> => { console.log(log) });
+        const res = await bundler.uploader.uploadFolder(folder, options.indexFile ?? null, +options.batchSize, options.confirmation, !options.removeDeleted, async (log: any): Promise<void> => { console.log(log) });
         if (res != "none") {
             console.log(`Uploaded to https://arweave.net/${res}`);
         }
-    } catch (err) {
+    } catch (err: any) {
         console.error(`Error whilst uploading ${folder} - ${options.debug ? err.stack : err.message}`)
     }
 }
@@ -118,7 +117,7 @@ program.command("fund").description("Funds your account with the specified amoun
             } else {
                 console.log("confirmation failed")
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(`Error whilst funding: ${options.debug ? err.stack : err.message} `);
             return;
         }
@@ -132,7 +131,7 @@ program.command("price").description("Check how much of a specific currency is r
             await bundlr.utils.getBundlerAddress(options.currency) // will throw if the bundler doesn't support the currency
             const cost = await bundlr.utils.getPrice(options.currency, +bytes);
             console.log(`Price for ${bytes} bytes in ${options.currency} is ${cost.toFixed(0)} ${bundlr.currencyConfig.base[0]} (${bundlr.utils.unitConverter(cost).toFixed()} ${bundlr.currency})`);
-        } catch (err) {
+        } catch (err: any) {
             console.error(`Error whilst getting price: ${options.debug ? err.stack : err.message} `);
             return;
         }
@@ -158,7 +157,7 @@ async function confirmation(message: string): Promise<boolean> {
  * @param opts the parsed options from the cli
  * @returns a new Bundlr instance
  */
-async function init(opts, operation): Promise<Bundlr> {
+async function init(opts: OptionValues, operation: string): Promise<NodeBundlr> {
     let wallet;
     let bundler: NodeBundlr
     // every option needs a host and currency so ensure they're present
@@ -185,10 +184,9 @@ async function init(opts, operation): Promise<Bundlr> {
     }
     try {
         // create and ready the bundlr instance
-        bundler = new Bundlr(opts.host, opts.currency.toLowerCase(), wallet, { providerUrl: opts.providerUrl, contractAddress: opts.contractAddress });
-        // await bundler.ready()
+        bundler = await NodeBundlr.init(opts.host, opts.currency.toLowerCase(), wallet, { providerUrl: opts.providerUrl, contractAddress: opts.contractAddress }) as NodeBundlr
 
-    } catch (err) {
+    } catch (err: any) {
         throw new Error(`Error initialising Bundlr client - ${options.debug ? err.stack : err.message}`);
     }
     // log the loaded address

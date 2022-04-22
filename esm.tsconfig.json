@@ -1,33 +1,17 @@
 {
+    "extends": "./tsconfig.json",
     "compilerOptions": {
-        "target": "es6",
-        "module": "esm",
-        "moduleResolution": "node",
-        "skipLibCheck": true,
-        "allowSyntheticDefaultImports": true,
-        "allowJs": true,
-        "declaration": true,
-        "lib": [
-            "es2019",
-            "dom"
-        ],
-        "esModuleInterop": true,
-        "alwaysStrict": true,
-        "sourceMap": true,
-        "forceConsistentCasingInFileNames": true,
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitReturns": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noImplicitAny": false,
-        "noImplicitThis": false,
-        "strictNullChecks": false,
-        "outDir": "build/esm"
+        "module": "esnext",
+        "outDir": "build/esm",
+        "target": "esnext",
+        "plugins": [
+            {
+                "transform": "./scripts/transformer.js",
+                "after": true
+            }
+        ]
     },
     "include": [
-        "src/**/*"
-    ],
-    "exclude": [
-        "src/__tests__/**"
+        "src"
     ]
 }

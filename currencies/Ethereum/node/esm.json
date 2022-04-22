@@ -1,0 +1,42 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "declaration": true,
+        "esModuleInterop": true,
+        "inlineSourceMap": false,
+        "lib": [
+            "esnext"
+        ],
+        "listEmittedFiles": false,
+        "listFiles": false,
+        "moduleResolution": "node",
+        "noFallthroughCasesInSwitch": true,
+        "pretty": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "traceResolution": false,
+        "types": [
+            "node"
+        ],
+        "plugins": [
+            {
+                "transform": "../../../scripts/transformer.js",
+                "after": true
+            }
+        ],
+        "outDir": "./esm",
+        "module": "esnext",
+        "target": "esnext",
+        "rootDir": "../"
+    },
+    "exclude": [
+        "cjs/",
+        "esm/",
+        "node/"
+    ],
+    "include": [
+        "**/*.ts"
+    ]
+}

@@ -1,26 +1,30 @@
 {
   "compilerOptions": {
-    "target": "es2019",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "allowJs": true,
-    "declaration": true,
-    "lib": ["es2019", "dom"],
-    "esModuleInterop": true,
-    "alwaysStrict": true,
-    "sourceMap": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitAny": false,
-    "noImplicitThis": false,
-    "strictNullChecks": false,
-    "outDir": "build"
+      "allowJs": true,
+      "allowSyntheticDefaultImports": true,
+      "baseUrl": "src",
+      "declaration": true,
+      "esModuleInterop": true,
+      "inlineSourceMap": false,
+      "lib": ["esnext"],
+      "target": "esnext",
+      "listEmittedFiles": false,
+      "listFiles": false,
+      "moduleResolution": "node",
+      "noFallthroughCasesInSwitch": true,
+      "pretty": true,
+      "resolveJsonModule": true,
+      "rootDir": "src",
+      "skipLibCheck": true,
+      "strict": true,
+      "traceResolution": false,
+      "types": ["node"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/__tests__/**"]
+  "compileOnSave": true,
+  "exclude": ["node_modules", "dist", "scripts", "chains", "keys"],
+  "include": ["src"]
+  // "references": [
+  //   {"path": "src/currencies/Arweave/node"},
+  //   {"path": "src/currencies/Arweave/web"}
+  // ]
 }

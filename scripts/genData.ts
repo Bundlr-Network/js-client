@@ -4,7 +4,7 @@ import Crypto from "crypto"
 
 export const checkPath = async (path: PathLike): Promise<boolean> => { return fs.promises.stat(path).then(_ => true).catch(_ => false) }
 
-function randomNumber(min, max) {
+function randomNumber(min: number, max: number) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -30,17 +30,17 @@ export async function genData(path: string, number: number, minSize: number, max
         }
         await new Promise(res => strm.close(res))
         if (i % 10 == 0) {
-            console.log(i);
+            console.log(`Generated ${i} items`);
         }
     }
     console.log("done")
 }
 
 
-async function t1() {
-    await genData("./testFolder", 10_000, 1_000, 9_000)
-}
+// async function t1() {
+//     await genData("./testFolder", 1_000, 1_000, 9_000)
+// }
 
-t1();
+// t1();
 
 

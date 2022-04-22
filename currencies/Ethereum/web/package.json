@@ -1,0 +1,47 @@
+{
+    "name": "@bundlr-network/ethereum-web",
+    "version": "0.0.1-rc3",
+    "description": "Ethereum Currency for Bundlr",
+    "main": "index.js",
+    "author": "JesseTheRobot",
+    "license": "MIT",
+    "scripts": {
+        "dev:build": "rm -rf ./cjs && rm -rf ./esm && tsc -p ./cjs.json && ttsc -p ./esm.json",
+        "build": "yarn run dev:build && webpack"
+    },
+    "exports": {
+        ".": {
+            "import": "./esm/web/index.js",
+            "require": "./cjs/web/index.js"
+        },
+        "./*": {
+            "import": "./*.js",
+            "require": "./*.js"
+        },
+        "./bundle": "./esm/web/bundle.js"
+    },
+    "files": [
+        "cjs/**/*",
+        "esm/**/*"
+    ],
+    "peerDependencies": {
+        "@bundlr-network/client": "^0.8.0-rc1"
+    },
+    "dependencies": {
+        "bignumber.js": "^9.0.2",
+        "bn.js": "^5.2.0",
+        "ethers": "^5.6.2",
+        "keccak": "^3.0.2"
+    },
+    "devDependencies": {
+        "@bundlr-network/client": "^0.8.0-rc1",
+        "@types/keccak": "^3.0.1",
+        "bignumber.js": "^9.0.2",
+        "bn.js": "^5.2.0",
+        "ethers": "^5.6.2",
+        "inspectpack": "^4.7.1",
+        "keccak": "^3.0.2",
+        "webpack": "^5.72.0",
+        "webpack-cli": "^4.9.2"
+    }
+}

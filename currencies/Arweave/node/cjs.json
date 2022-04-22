@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "declaration": true,
+        "esModuleInterop": true,
+        "inlineSourceMap": false,
+        "lib": [
+            "esnext"
+        ],
+        "listEmittedFiles": false,
+        "listFiles": false,
+        "moduleResolution": "node",
+        "noFallthroughCasesInSwitch": true,
+        "pretty": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "traceResolution": false,
+        "types": [
+            "node"
+        ],
+        "outDir": "./cjs",
+        "module": "commonjs",
+        "target": "es2015",
+        "rootDir": "../"
+    },
+    "exclude": [
+        "cjs/",
+        "esm/",
+        "node/"
+    ],
+    "include": [
+        "**/*.ts"
+    ]
+}

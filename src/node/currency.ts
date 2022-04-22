@@ -1,27 +1,28 @@
-import { FileDataItem } from "arbundles/file";
-import { Signer } from "arbundles/src/signing";
+import { DataItem } from "arbundles";
+import { Signer } from "../common/signing";
 import Arweave from "arweave";
 import base64url from "base64url";
 import BigNumber from "bignumber.js";
-import { Tx, CurrencyConfig } from "../common/types"
+import { Tx, CurrencyConfig, CreatedTx } from "../common/types"
 import axios from "axios";
 import { NodeCurrency } from "./types";
 import utils from "../common/utils"
+
 export default abstract class BaseNodeCurrency implements NodeCurrency {
-    public base: [string, number];
+    public base!: [string, number];
     protected wallet: any
     protected _address: string
     protected providerUrl: any;
     protected providerInstance?: any
-    public ticker: string;
-    public name: string;
-    protected minConfirm = 5;
+    public ticker!: string;
+    public name!: string;
+    public minConfirm = 5;
     public isSlow = false;
     public needsFee = false;
 
     constructor(config: CurrencyConfig) {
         Object.assign(this, config);
-        this._address = this.wallet ? this.ownerToAddress(this.getPublicKey()) : undefined;
+        this._address = this.wallet ? this.ownerToAddress(this.getPublicKey()) : "";
     }
 
     // common methods
@@ -31,8 +32,8 @@ export default abstract class BaseNodeCurrency implements NodeCurrency {
     }
 
 
-    async getId(item: FileDataItem): Promise<string> {
-        return base64url.encode(Buffer.from(await Arweave.crypto.hash(await item.rawSignature())));
+    async getId(item: DataItem): Promise<string> {
+        return base64url.encode(Buffer.from(await Arweave.crypto.hash(item.rawSignature)));
     }
     async price(): Promise<number> {
         return getRedstonePrice(this.ticker);
@@ -45,7 +46,7 @@ export default abstract class BaseNodeCurrency implements NodeCurrency {
     abstract getCurrentHeight(): Promise<BigNumber>
     abstract getFee(_amount: BigNumber.Value, _to?: string): Promise<BigNumber>
     abstract sendTx(_data: any): Promise<any>
-    abstract createTx(_amount: BigNumber.Value, _to: string, _fee?: string): Promise<{ txId: string; tx: any; }>
+    abstract createTx(_amount: BigNumber.Value, _to: string, _fee?: string): Promise<CreatedTx>
     abstract getPublicKey(): string | Buffer
 }
 

@@ -43,7 +43,7 @@ export default class NodeUploader extends Uploader {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    private async* walk(dir: string) {
+    private async* walk(dir: string): any {
         for await (const d of await promises.opendir(dir)) {
             const entry = p.join(dir, d.name);
             if (d.isDirectory()) yield* await this.walk(entry);
@@ -62,7 +62,7 @@ export default class NodeUploader extends Uploader {
     * @returns 
      */
     // eslint-disable-next-line @typescript-eslint/ban-types
-    public async uploadFolder(path: string, indexFile?: string, batchSize?: number, interactivePreflight?: boolean, keepDeleted = true, logFunction?: (log: string) => Promise<unknown>,): Promise<string> {
+    public async uploadFolder(path: string, indexFile?: string, batchSize = 10, interactivePreflight?: boolean, keepDeleted = true, logFunction?: (log: string) => Promise<unknown>,): Promise<string> {
         path = p.resolve(path);
         const alreadyProcessed = new Map();
 
@@ -74,7 +74,7 @@ export default class NodeUploader extends Uploader {
         if (!logFunction && interactivePreflight) {
             logFunction = async (log): Promise<void> => { console.log(log) }
         } else if (!logFunction) { // blackhole logs
-            async (_): Promise<any> => { return }
+            logFunction = async (_: any): Promise<any> => { return }
         }
 
         // manifest with folder name placed in parent directory of said folder - keeps contamination down.
@@ -138,7 +138,7 @@ export default class NodeUploader extends Uploader {
             if (await checkPath(idpath)) {
                 return (await promises.readFile(idpath)).toString();
             }
-            return undefined;
+            return "none";
         }
 
         const zprice = (await this.utils.getPrice(this.currency, 0)).multipliedBy(files.length);
@@ -161,7 +161,7 @@ export default class NodeUploader extends Uploader {
         const wstrm = createWriteStream(manifestPath, { flags: "a+" })
         stringifier.pipe(wstrm)
 
-        const processor = async (data): Promise<void> => {
+        const processor = async (data: any): Promise<void> => {
             if (data?.res?.data?.id) {
                 stringifier.write([p.relative(path, data.item), data.res.data.id])
             }

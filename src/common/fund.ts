@@ -38,14 +38,13 @@ export default class Fund {
         if (!tx.txId) {
             tx.txId = nres;
         }
-
         // console.log(tx.txId);
 
         Utils.checkAndThrow(nres, `Sending transaction to the ${this.utils.currency} network`);
-        await this.utils.confirmationPoll(tx.txId);
+        await this.utils.confirmationPoll(tx.txId as string);
         const bres = await this.utils.api.post(`/account/balance/${this.utils.currency}`, { tx_id: tx.txId })
             .catch(_ => { throw new Error(`failed to post funding tx - ${tx.txId} - keep this id!`) })
         Utils.checkAndThrow(bres, `Posting transaction ${tx.txId} information to the bundler`, [202]);
-        return { reward: fee, target: to, quantity: _amount.toString(), id: tx.txId };
+        return { reward: fee, target: to, quantity: _amount.toString(), id: tx.txId as string };
     }
 }

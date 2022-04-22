@@ -1,0 +1,46 @@
+{
+  "name": "@bundlr-network/near",
+  "version": "0.0.1-rc1",
+  "description": "Near Currency for Bundlr",
+  "main": "index.js",
+  "author": "JesseTheRobot",
+  "license": "MIT",
+  "scripts": {
+    "dev:build": "rm -rf ./cjs && rm -rf ./esm && tsc -p ./cjs.json && ttsc -p ./esm.json",
+    "build": "yarn run dev:build"
+  },
+  "exports": {
+    ".": {
+      "import": "./esm/node/index.js",
+      "require": "./cjs/node/index.js"
+    },
+    "./*": {
+      "import": "./*.js",
+      "require": "./*.js"
+    }
+  },
+  "files": [
+    "cjs/**/*",
+    "esm/**/*"
+  ],
+  "peerDependencies": {
+    "@bundlr-network/client": "^0.8.0-rc1"
+  },
+  "dependencies": {
+    "@noble/ed25519": "^1.6.0",
+    "base64url": "^3.0.1",
+    "bn.js": "^5.2.0",
+    "bs58": "^5.0.0",
+    "js-sha256": "^0.9.0",
+    "near-api-js": "^0.44.2"
+  },
+  "devDependencies": {
+    "@bundlr-network/client": "^0.8.0-rc1",
+    "@noble/ed25519": "^1.6.0",
+    "base64url": "^3.0.1",
+    "bn.js": "^5.2.0",
+    "bs58": "^5.0.0",
+    "js-sha256": "^0.9.0",
+    "near-api-js": "^0.44.2"
+  }
+}

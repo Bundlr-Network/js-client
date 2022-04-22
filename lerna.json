@@ -1,0 +1,8 @@
+{
+    "packages": [
+        ".",
+        "currencies/**/*"
+    ],
+    "version": "independent",
+    "npmClient": "yarn"
+}
