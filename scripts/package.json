@@ -4,6 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@cosmjs/crypto": "^0.28.4",
+    "@cosmjs/proto-signing": "^0.28.4",
     "@supercharge/promise-pool": "^2.1.0",
     "arweave": "^1.10.23",
     "axios": "^0.26.1",

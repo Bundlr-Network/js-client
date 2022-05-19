@@ -61,7 +61,7 @@ export async function withdrawBalance(utils: Utils, api: Api, amount: BigNumber.
     // console.log(isValid2)
     // console.log(isValid)
 
-    if (!(isValid || isValid2 || isValid3)) { throw new Error(`Internal withdrawal validation failed - please report this!\nDebug Info:${JSON.stringify(data)}`) }
+    if (!(isValid && isValid2 && isValid3)) { throw new Error(`Internal withdrawal validation failed - please report this!\nDebug Info:${JSON.stringify(data)}`) }
 
     // console.log(JSON.stringify({
     //     ...data,

@@ -1,0 +1,51 @@
+{
+  "name": "@bundlr-network/cosmos-web",
+  "version": "0.0.1",
+  "description": "Cosmos Currency for Bundlr",
+  "main": "index.js",
+  "author": "rabm2k7",
+  "license": "MIT",
+  "scripts": {
+    "dev:build": "rm -rf ./cjs && rm -rf ./esm && tsc -p ./cjs.json && ttsc -p ./esm.json",
+    "build": "yarn run dev:build && webpack"
+  },
+  "exports": {
+    ".": {
+      "import": "./esm/web/index.js",
+      "require": "./cjs/web/index.js"
+    },
+    "./*": {
+      "import": "./*.js",
+      "require": "./*.js"
+    },
+    "./bundle": "./esm/web/bundle.js"
+  },
+  "files": [
+    "cjs/**/*",
+    "esm/**/*"
+  ],
+  "peerDependencies": {
+    "@bundlr-network/client": "^0.8.0-rc1"
+  },
+  "dependencies": {
+    "@cosmjs/amino": "^0.28.4",
+    "@cosmjs/crypto": "^0.28.4",
+    "@cosmjs/proto-signing": "^0.28.4",
+    "@cosmjs/stargate": "^0.28.4",
+    "@types/keccak": "^3.0.1",
+    "bignumber.js": "^9.0.2",
+    "bn.js": "^5.2.0",
+    "cosmjs-types": "^0.4.1",
+    "keccak": "^3.0.2",
+    "path-browserify": "^1.0.1"
+  },
+  "devDependencies": {
+    "@bundlr-network/client": "^0.8.0-rc1",
+    "bignumber.js": "^9.0.2",
+    "bn.js": "^5.2.0",
+    "inspectpack": "^4.7.1",
+    "keccak": "^3.0.2",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
+  }
+}

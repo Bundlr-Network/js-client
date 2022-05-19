@@ -8,6 +8,7 @@ import Utils, { importAndGetBundlrFlavour } from "../common/utils";
 // import EthereumConfig from "./currencies/ethereum";
 // import NearConfig from "./currencies/near";
 // import SolanaConfig from "./currencies/solana";
+// import CosmosConfig from "./currencies/cosmos";
 import { WebCurrency } from "./types";
 
 export default class WebBundlr extends Bundlr {

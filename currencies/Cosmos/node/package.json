@@ -1,0 +1,42 @@
+{
+  "name": "@bundlr-network/cosmos",
+  "version": "0.0.1",
+  "description": "Cosmos Currency for Bundlr",
+  "main": "index.js",
+  "author": "rabm2k7",
+  "license": "MIT",
+  "scripts": {
+    "dev:build": "rm -rf ./cjs && rm -rf ./esm && tsc -p ./cjs.json && ttsc -p ./esm.json",
+    "build": "yarn run dev:build"
+  },
+  "exports": {
+    ".": {
+      "import": "./esm/node/index.js",
+      "require": "./cjs/node/index.js"
+    },
+    "./*": {
+      "import": "./*.js",
+      "require": "./*.js"
+    }
+  },
+  "files": [
+    "cjs/**/*",
+    "esm/**/*"
+  ],
+  "peerDependencies": {
+    "@bundlr-network/client": "^0.8.0-rc1"
+  },
+  "dependencies": {
+    "@cosmjs/amino": "^0.28.4",
+    "@cosmjs/crypto": "^0.28.4",
+    "@cosmjs/proto-signing": "^0.28.4",
+    "@cosmjs/stargate": "^0.28.4",
+    "@types/keccak": "^3.0.1",
+    "bignumber.js": "^9.0.2",
+    "cosmjs-types": "^0.4.1",
+    "keccak": "^3.0.2"
+  },
+  "devDependencies": {
+    "@bundlr-network/client": "^0.8.0-rc1"
+  }
+}

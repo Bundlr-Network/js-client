@@ -11,7 +11,7 @@ import utils from "../common/utils"
 export default abstract class BaseNodeCurrency implements NodeCurrency {
     public base!: [string, number];
     protected wallet: any
-    protected _address: string
+    protected _address!: string
     protected providerUrl: any;
     protected providerInstance?: any
     public ticker!: string;
@@ -22,10 +22,14 @@ export default abstract class BaseNodeCurrency implements NodeCurrency {
 
     constructor(config: CurrencyConfig) {
         Object.assign(this, config);
-        this._address = this.wallet ? this.ownerToAddress(this.getPublicKey()) : "";
+        // this._address = this.wallet ? this.ownerToAddress(this.getPublicKey()) : "";
     }
 
     // common methods
+
+    public async ready(): Promise<void> {
+        this._address = this.wallet ? this.ownerToAddress(await this.getPublicKey()) : "";
+    }
 
     get address(): string {
         return this._address

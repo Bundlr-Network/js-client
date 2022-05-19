@@ -52,6 +52,8 @@
     "bundlr": "./build/cjs/node/cli.js"
   },
   "dependencies": {
+    "@keplr-wallet/stores": "^0.10.3",
+    "@keplr-wallet/types": "^0.10.3",
     "@supercharge/promise-pool": "^2.1.0",
     "arbundles": "^0.7.0-rc2",
     "arweave": "1.10.18",

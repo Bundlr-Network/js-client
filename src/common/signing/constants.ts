@@ -84,6 +84,7 @@ export enum SignatureConfig {
   ED25519,
   ETHEREUM,
   SOLANA,
+  COSMOS
 }
 
 interface SignatureMeta {
@@ -112,6 +113,11 @@ export const SIG_CONFIG: Record<SignatureConfig, SignatureMeta> = {
     sigLength: 64,
     pubLength: 32,
     sigName: "solana",
+  },
+  [SignatureConfig.COSMOS]: {
+    sigLength: 96,
+    pubLength: 65,
+    sigName: "cosmos",
   },
 };
 

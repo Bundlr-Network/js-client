@@ -42,11 +42,21 @@ export default class NodeBundlr extends Bundlr {
         return this.uploader.uploadFile(path);
     };
 
-
+    /**
+     * Optional ready method for currencies that require asynchronous initialisation.
+     */
+    async ready(): Promise<void> {
+        if (this.currencyConfig.ready) {
+            await this.currencyConfig.ready();
+            this.address = this.currencyConfig.address
+        }
+    }
 
     static async init(url: string, currency: string, wallet: any, config?: BundlrConfig): Promise<NodeBundlr> {
         const bundlr = await importAndGetBundlrFlavour(currency)
-        return new bundlr(url, wallet, config) as NodeBundlr
+        const newBundlr = new bundlr(url, wallet, config) as NodeBundlr
+        await newBundlr.ready()
+        return newBundlr
     }
 
 }
